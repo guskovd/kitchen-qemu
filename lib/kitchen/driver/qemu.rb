@@ -220,20 +220,8 @@ module Kitchen
         cmd.push('-spice', config[:spice].to_s) if config[:spice]
         cmd.push('-vnc',   config[:vnc].to_s)   if config[:vnc]
 
-        cmd.push('-device', 'virtio-scsi-pci,id=scsi')
         config[:image].each_with_index do |image, i|
-          drive = ['if=none', "id=drive#{i}"]
-          drive.push("readonly=#{image[:readonly]}")           if image.has_key?(:readonly)
-          drive.push("snapshot=#{image[:snapshot]}")           if image.has_key?(:snapshot)
-          drive.push("discard=#{image[:discard]}")             if image.has_key?(:discard)
-          drive.push("detect-zeroes=#{image[:detect_zeroes]}") if image.has_key?(:detect_zeroes)
-          if ['/', '.'].include? image[:file][0]
-            drive.push("file=#{image[:file]}")
-          else
-            drive.push("file=#{config[:image_path]}/#{image[:file]}")
-          end
-          cmd.push('-device', "scsi-hd,drive=drive#{i}",
-                   '-drive', drive.join(','))
+          cmd.push('-drive', image)
         end
 
         smp = []
