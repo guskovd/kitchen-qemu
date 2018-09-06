@@ -221,7 +221,7 @@ module Kitchen
         cmd.push('-vnc',   config[:vnc].to_s)   if config[:vnc]
 
         config[:image].each_with_index do |image, i|
-          cmd.push('-drive', image)
+          cmd.push('-drive', image[:file])
         end
 
         smp = []
